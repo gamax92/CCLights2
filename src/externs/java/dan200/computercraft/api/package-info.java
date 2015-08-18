@@ -4,19 +4,7 @@
  * For help using the API, and posting your mods, visit the forums at computercraft.info.
  */
 
-package dan200.computercraft.api.turtle;
+@API( owner="ComputerCraft", provides="ComputerCraft|API", apiVersion="1.74" )
+package dan200.computercraft.api;
 
-public enum TurtleAnimation
-{
-    None,
-    MoveForward,
-    MoveBack,
-    MoveUp,
-    MoveDown,
-    TurnLeft,
-    TurnRight,
-    SwingLeftTool,
-    SwingRightTool,
-    Wait,
-    ShortWait,
-}
+import cpw.mods.fml.common.API;

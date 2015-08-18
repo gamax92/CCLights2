@@ -1,12 +1,13 @@
 /**
  * This file is part of the public ComputerCraft API - http://www.computercraft.info
- * Copyright Daniel Ratcliffe, 2011-2014. This API may be redistributed unmodified and in full only.
+ * Copyright Daniel Ratcliffe, 2011-2015. This API may be redistributed unmodified and in full only.
  * For help using the API, and posting your mods, visit the forums at computercraft.info.
  */
 
 package dan200.computercraft.api.turtle;
 
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,6 +73,18 @@ public interface ITurtleAccess
     public void setSelectedSlot( int slot );
 
     /**
+     * Sets the colour of the turtle, as if the player had dyed it with a dye item.
+     * @param dyeColour 0-15 to dye the turtle one of the 16 standard minecraft colours, or -1 to remove the dye from the turtle.
+     */
+    public void setDyeColour( int dyeColour );
+
+    /**
+     * Gets the colour the turtle has been dyed.
+     * @return 0-15 if the turtle has been dyed one of the 16 standard minecraft colours, -1 if the turtle is clean.
+     */
+    public int getDyeColour();
+
+    /**
      * TODO: Document me
      */
     public IInventory getInventory();
@@ -119,7 +132,7 @@ public interface ITurtleAccess
      * unchanged if called from a peripheral method.
      * @see ITurtleCommand
      */
-    public Object[] executeCommand( ILuaContext context, ITurtleCommand command ) throws Exception;
+    public Object[] executeCommand( ILuaContext context, ITurtleCommand command ) throws LuaException, InterruptedException;
 
     /**
      * TODO: Document me

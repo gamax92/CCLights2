@@ -1,6 +1,6 @@
 /**
  * This file is part of the public ComputerCraft API - http://www.computercraft.info
- * Copyright Daniel Ratcliffe, 2011-2014. This API may be redistributed unmodified and in full only.
+ * Copyright Daniel Ratcliffe, 2011-2015. This API may be redistributed unmodified and in full only.
  * For help using the API, and posting your mods, visit the forums at computercraft.info.
  */
 
@@ -28,7 +28,12 @@ public interface IComputerAccess
 	 * @see dan200.computercraft.api.filesystem.IMount
 	 */
 	public String mount( String desiredLocation, IMount mount );
-	
+
+    /**
+     * TODO: Document me
+     */
+    public String mount( String desiredLocation, IMount mount, String driveName );
+
 	/**
 	 * Mount a mount onto the computers' file system in a writable mode.<br>
 	 * @param desiredLocation The location on the computercraft's file system where you would like the mount to be mounted.
@@ -41,7 +46,12 @@ public interface IComputerAccess
 	 * @see IMount
 	 */
 	public String mountWritable( String desiredLocation, IWritableMount mount );
-	
+
+    /**
+     * TODO: Document me
+     */
+    public String mountWritable( String desiredLocation, IWritableMount mount, String driveName );
+
 	/**
 	 * Unmounts a directory previously mounted onto the computers file system by mount() or mountWritable().<br>
 	 * When a directory is unmounted, it will disappear from the computers file system, and the user will no longer be able to

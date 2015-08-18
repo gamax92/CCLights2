@@ -4,20 +4,7 @@
  * For help using the API, and posting your mods, visit the forums at computercraft.info.
  */
 
+@API( owner="ComputerCraft", provides="ComputerCraft|API|Turtle", apiVersion="1.74" )
 package dan200.computercraft.api.turtle;
 
-/**
- * An enum representing the two sides of the turtle that a turtle turtle might reside.
- */
-public enum TurtleSide
-{
-	/**
-	 * The turtles left side (where the pickaxe usually is on a Wireless Mining Turtle)
-	 */
-	Left,
-
-	/**
-	 * The turtles right side (where the modem usually is on a Wireless Mining Turtle)
-	 */
-	Right,
-}
+import cpw.mods.fml.common.API;
