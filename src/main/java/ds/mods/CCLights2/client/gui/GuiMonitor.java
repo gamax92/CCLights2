@@ -63,7 +63,7 @@ public class GuiMonitor extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3)
-    {
+	{
 		par1 = applyXOffset(par1);
 		par2 = applyYOffset(par2);
 		
@@ -106,30 +106,30 @@ public class GuiMonitor extends GuiScreen {
 		
 		
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-    }
+	}
 	
 	public void drawTexturedModalRect(int x, int y, int w, int h)
-    {
+	{
 		GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_FOG);
-        Tessellator var2 = Tessellator.instance;
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        float var3 = 256.0F;
-        GL11.glPushMatrix();
-        GL11.glScaled(1D, 1D, 1D);
-        var2.startDrawingQuads();
-        //var2.setColorOpaque_I(4210752);
-        var2.addVertexWithUV(x, y, this.zLevel, 0.0D, 0D);
-        var2.addVertexWithUV(x, (double)h+y, this.zLevel, 0.0D, h/(9*32D));
-        var2.addVertexWithUV((double)w+x, (double)h+y, this.zLevel, w/(16*32D), h/(9*32D));
-        var2.addVertexWithUV((double)w+x, y, this.zLevel, w/(16*32D), 0D);
-        var2.draw();
-        GL11.glPopMatrix();
-    }
+		GL11.glDisable(GL11.GL_FOG);
+		Tessellator var2 = Tessellator.instance;
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		float var3 = 256.0F;
+		GL11.glPushMatrix();
+		GL11.glScaled(1D, 1D, 1D);
+		var2.startDrawingQuads();
+		//var2.setColorOpaque_I(4210752);
+		var2.addVertexWithUV(x, y, this.zLevel, 0.0D, 0D);
+		var2.addVertexWithUV(x, (double)h+y, this.zLevel, 0.0D, h/(9*32D));
+		var2.addVertexWithUV((double)w+x, (double)h+y, this.zLevel, w/(16*32D), h/(9*32D));
+		var2.addVertexWithUV((double)w+x, y, this.zLevel, w/(16*32D), 0D);
+		var2.draw();
+		GL11.glPopMatrix();
+	}
 	
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3)
-    {
+	{
 		par1 = applyXOffset(par1);
 		par2 = applyYOffset(par2);
 		if (par1 > -1 & par2 > -1 & par1 < mon.getWidth()+1 & par2 < mon.getHeight()+1)
@@ -142,11 +142,11 @@ public class GuiMonitor extends GuiScreen {
 			my = par2;
 			PacketSenders.mouseEvent(mx,my,par3,tile);
 		}
-    }
+	}
 	
 	@Override
 	protected void mouseMovedOrUp(int par1, int par2, int par3)
-    {
+	{
 		par1 = applyXOffset(par1);
 		par2 = applyYOffset(par2);
 		if (isMouseDown)
@@ -154,20 +154,36 @@ public class GuiMonitor extends GuiScreen {
 			if (par3 == mouseButton)
 			{
 				isMouseDown = false;
-                PacketSenders.mouseEventUp(tile);
+				PacketSenders.mouseEventUp(tile);
 			}
 		}
-    }
-
+	}
+	
+	@Override
+	public void handleKeyboardInput() {
+		super.handleKeyboardInput();
+		if (!Keyboard.getEventKeyState()) {
+			keyRelease(Keyboard.getEventCharacter(), Keyboard.getEventKey()); // TODO: Character is 0?
+		}
+	}
+	
 	@Override
 	protected void keyTyped(char par1, int par2)
-    {
-        super.keyTyped(par1, par2);
-        if (par2 != 1)
-        {
-			  PacketSenders.sendKeyEvent(par1, par2,tile);
-        }
-    }
+	{
+		super.keyTyped(par1, par2);
+		if (par2 != 1)
+		{
+			PacketSenders.sendKeyEvent(par1, par2, Keyboard.isRepeatEvent(), tile);
+		}
+	}
+	
+	protected void keyRelease(char par1, int par2)
+	{
+		if (par2 != 1)
+		{
+			PacketSenders.sendKeyEventUp(par1, par2, tile);
+		}
+	}
 	
 	@Override
 	public void onGuiClosed()
@@ -177,7 +193,7 @@ public class GuiMonitor extends GuiScreen {
 	
 	@Override
 	public boolean doesGuiPauseGame()
-    {
-        return false;
-    }
+	{
+		return false;
+	}
 }

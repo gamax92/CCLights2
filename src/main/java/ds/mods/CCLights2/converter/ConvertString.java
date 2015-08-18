@@ -8,6 +8,6 @@ public class ConvertString {
 		if (obj instanceof String)
 			return (String) obj;
 		else
-			throw new LuaException("string expected, got "+obj.getClass().getName());
+			throw new LuaException("string expected, got "+obj.getClass().getSimpleName());
 	}
 }

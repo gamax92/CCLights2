@@ -8,6 +8,6 @@ public class ConvertDouble {
 		if (obj instanceof Double)
 			return (Double) obj;
 		else
-			throw new LuaException("double expected, got "+obj.getClass().getName());
+			throw new LuaException("double expected, got "+obj.getClass().getSimpleName());
 	}
 }

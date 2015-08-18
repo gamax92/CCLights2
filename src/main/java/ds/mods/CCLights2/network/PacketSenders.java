@@ -231,16 +231,18 @@ public final class PacketSenders {
 		}
 	}
 
-	public static void sendKeyEvent(char par1, int par2, TileEntityMonitor tile) {
+	public static void sendKeyEvent(char par1, int par2, boolean repeat, TileEntityMonitor tile) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
 		outputStream.writeByte(PacketHandlerIMPL.NET_GPUEVENT);
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
 		outputStream.writeUTF("key");
-		outputStream.writeInt(1);
+		outputStream.writeInt(2);
 		outputStream.writeInt(0);
 		outputStream.writeInt(par2);
+		outputStream.writeInt(3);
+		outputStream.writeBoolean(repeat);
 		createPacketAndSend(outputStream);
 
 		if (ChatAllowedCharacters.isAllowedCharacter(par1)) {

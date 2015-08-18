@@ -149,8 +149,8 @@ public class PacketHandlerIMPL {
 			if (mtile != null) {
 				String event = PacketData.readUTF();
 				int len = PacketData.readInt();
-				Object[] args = new Object[len + 1];
-				for (int i1 = 1; i1 <= len; i1++) {
+				Object[] args = new Object[len];
+				for (int i1 = 0; i1 < len; i1++) {
 					int type = PacketData.readInt();
 					switch (type) {
 					case 0: {
@@ -163,6 +163,10 @@ public class PacketHandlerIMPL {
 					}
 					case 2: {
 						args[i1] = String.valueOf(PacketData.readChar());
+						break;
+					}
+					case 3: {
+						args[i1] = PacketData.readBoolean();
 						break;
 					}
 					}
