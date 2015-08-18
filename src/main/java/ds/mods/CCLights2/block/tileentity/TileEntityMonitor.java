@@ -2,11 +2,11 @@ package ds.mods.CCLights2.block.tileentity;
 
 import java.awt.Color;
 
-import net.minecraft.tileentity.TileEntity;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import ds.mods.CCLights2.gpu.GPU;
 import ds.mods.CCLights2.gpu.Monitor;
+import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityMonitor extends TileEntity {
 	public Monitor mon;
@@ -38,7 +38,7 @@ public class TileEntityMonitor extends TileEntity {
 
 		@Override
 		public Object[] callMethod(ILuaContext context, int method,
-				Object[] arguments) throws Exception {
+				Object[] arguments) {
 			switch (method)
 			{
 			case 0:

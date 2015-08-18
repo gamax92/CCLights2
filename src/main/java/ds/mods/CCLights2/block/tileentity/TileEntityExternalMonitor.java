@@ -2,11 +2,6 @@ package ds.mods.CCLights2.block.tileentity;
 
 import java.awt.Color;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
@@ -16,6 +11,10 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import ds.mods.CCLights2.CCLights2;
 import ds.mods.CCLights2.gpu.Monitor;
 import ds.mods.CCLights2.network.PacketSenders;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 
 public class TileEntityExternalMonitor extends TileEntityMonitor implements IPeripheral {
 	public static final int MAX_WIDTH = 16;
@@ -70,8 +69,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 			int maxX = (minX == monitor.xCoord ? this.xCoord : monitor.xCoord) + 1;
 			int maxY = (minY == monitor.yCoord ? this.yCoord : monitor.yCoord) + 1;
 			int maxZ = (minZ == monitor.zCoord ? this.zCoord : monitor.zCoord) + 1;
-			return AxisAlignedBB.getAABBPool().getAABB(minX, minY, minZ, maxX,
-					maxY, maxZ);
+			return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
 		}
 
 		return CCLights2.monitorBig.getCollisionBoundingBoxFromPool(
@@ -178,7 +176,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 	public TileEntityExternalMonitor getSimilarMonitorAt(int x, int y, int z) {
 		if ((y >= 0) && (y < this.worldObj.getHeight())) {
 			if (this.worldObj.getChunkProvider().chunkExists(x >> 4, z >> 4)) {
-				TileEntity tile = this.worldObj.getBlockTileEntity(x, y, z);
+				TileEntity tile = this.worldObj.getTileEntity(x, y, z);
 				if ((tile != null) && ((tile instanceof TileEntityExternalMonitor))) {
 					TileEntityExternalMonitor monitor = (TileEntityExternalMonitor) tile;
 					if ((monitor.getDir() == getDir())
@@ -466,7 +464,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer,ILuaContext context, int method,Object[] arguments) throws Exception {
+	public Object[] callMethod(IComputerAccess computer,ILuaContext context, int method,Object[] arguments) {
 		switch (method)
 		{
 		case 0:

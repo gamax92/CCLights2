@@ -3,6 +3,13 @@ package ds.mods.CCLights2.client.render;
 import java.awt.Color;
 import java.util.UUID;
 
+import org.lwjgl.opengl.GL11;
+
+import ds.mods.CCLights2.CCLights2;
+import ds.mods.CCLights2.block.tileentity.TileEntityTTrans;
+import ds.mods.CCLights2.gpu.Texture;
+import ds.mods.CCLights2.item.ItemTablet;
+import ds.mods.CCLights2.utils.TabMesg;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -16,14 +23,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
-import ds.mods.CCLights2.CCLights2;
-import ds.mods.CCLights2.block.tileentity.TileEntityTTrans;
-import ds.mods.CCLights2.gpu.Texture;
-import ds.mods.CCLights2.item.ItemTablet;
-import ds.mods.CCLights2.utils.TabMesg;
 
 public class TabletRenderer implements IItemRenderer {
 	
@@ -129,7 +128,7 @@ public class TabletRenderer implements IItemRenderer {
 					{
 						if (Minecraft.getMinecraft().theWorld == null) {GL11.glPopMatrix(); return;}
 						TileEntity noncast = Minecraft.getMinecraft().theWorld
-								.getBlockTileEntity(
+								.getTileEntity(
 										(Integer)TabMesg.getTabVar(trans, "x"),
 										(Integer)TabMesg.getTabVar(trans, "y"),
 										(Integer)TabMesg.getTabVar(trans, "z"));

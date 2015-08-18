@@ -3,14 +3,6 @@ package ds.mods.CCLights2.client.gui;
 import java.awt.Color;
 import java.util.UUID;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -21,6 +13,13 @@ import ds.mods.CCLights2.gpu.Monitor;
 import ds.mods.CCLights2.gpu.Texture;
 import ds.mods.CCLights2.network.PacketSenders;
 import ds.mods.CCLights2.utils.TabMesg;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class GuiTablet extends GuiScreen {
 	Monitor mon;
@@ -42,7 +41,7 @@ public class GuiTablet extends GuiScreen {
 		if (nbt.getBoolean("canDisplay")) {
 			UUID trans = UUID.fromString(nbt.getString("trans"));
 			tile = (TileEntityTTrans) Minecraft.getMinecraft().theWorld
-					.getBlockTileEntity(
+					.getTileEntity(
 							(Integer) TabMesg.getTabVar(trans, "x"),
 							(Integer) TabMesg.getTabVar(trans, "y"),
 							(Integer) TabMesg.getTabVar(trans, "z"));
@@ -64,7 +63,7 @@ public class GuiTablet extends GuiScreen {
 			oldScale = Minecraft.getMinecraft().gameSettings.guiScale;
 			Minecraft.getMinecraft().gameSettings.guiScale = 1;
 			ScaledResolution scaledresolution = new ScaledResolution(
-					this.mc.gameSettings, this.mc.displayWidth,
+					this.mc, this.mc.displayWidth,
 					this.mc.displayHeight);
 			this.width = scaledresolution.getScaledWidth();
 			this.height = scaledresolution.getScaledHeight();

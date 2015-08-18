@@ -7,12 +7,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
-import net.minecraft.util.ChatAllowedCharacters;
 import ds.mods.CCLights2.CCLights2;
 import ds.mods.CCLights2.jhlabs.image.BoxBlurFilter;
+import net.minecraft.util.ChatAllowedCharacters;
 
 
 public class Texture {
@@ -357,7 +358,7 @@ public class Texture {
         }
         else
         {
-            int i = ChatAllowedCharacters.allowedCharacters.indexOf(par1);
+            int i = Arrays.asList(ChatAllowedCharacters.allowedCharacters).indexOf(par1);
 
             if (i >= 0)
             {
@@ -434,7 +435,7 @@ public class Texture {
 	{
 		for (int i = 0; i<text.length(); i++)
 		{
-			int cha = ChatAllowedCharacters.allowedCharacters.indexOf(text.charAt(i));
+			int cha = Arrays.asList(ChatAllowedCharacters.allowedCharacters).indexOf(text.charAt(i));
 			if (cha == -1) cha = 0;
 			//Draw character
 			int cx = cha%16;

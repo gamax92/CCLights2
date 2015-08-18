@@ -2,6 +2,12 @@ package ds.mods.CCLights2.client.render;
 
 import java.awt.Color;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import ds.mods.CCLights2.CommonProxy;
+import ds.mods.CCLights2.block.tileentity.TileEntityExternalMonitor;
+import ds.mods.CCLights2.gpu.Texture;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -13,13 +19,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Facing;
 import net.minecraft.world.IBlockAccess;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import ds.mods.CCLights2.CommonProxy;
-import ds.mods.CCLights2.block.tileentity.TileEntityExternalMonitor;
-import ds.mods.CCLights2.gpu.Texture;
 
 public class TileEntityExternalMonitorRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler{
 	
@@ -110,7 +109,7 @@ public class TileEntityExternalMonitorRenderer extends TileEntitySpecialRenderer
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory() {
+	public boolean shouldRender3DInInventory(int modelId) {
 		return true;
 	}
 

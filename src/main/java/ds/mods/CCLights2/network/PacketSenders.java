@@ -16,22 +16,21 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.ChatAllowedCharacters;
-
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import ds.mods.CCLights2.CCLights2;
 import ds.mods.CCLights2.block.tileentity.TileEntityGPU;
 import ds.mods.CCLights2.block.tileentity.TileEntityMonitor;
 import ds.mods.CCLights2.block.tileentity.TileEntityTTrans;
 import ds.mods.CCLights2.gpu.DrawCMD;
 import ds.mods.CCLights2.gpu.Texture;
+import ds.mods.CCLights2.network.PacketHandler.PacketMessage;
 import ds.mods.CCLights2.serialize.Serialize;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatAllowedCharacters;
 
 public final class PacketSenders {
 
@@ -42,7 +41,7 @@ public final class PacketSenders {
 					"GPU cannot send packet without Tile Entity!");
 		}
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_GPUDRAWLIST);
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUDRAWLIST);
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
@@ -71,13 +70,11 @@ public final class PacketSenders {
 			}
 		}
 		try {
-			Packet[] packets = PacketChunker.instance.createPackets(
+			PacketMessage[] packets = PacketChunker.instance.createPackets(
 					"CCLights2", outputStream.toByteArray());
 
 			for (int g = 0; g < packets.length; g++) {
-				PacketDispatcher.sendPacketToAllAround(tile.xCoord,
-						tile.yCoord, tile.zCoord, 4096.0D,
-						tile.worldObj.provider.dimensionId, packets[g]);
+				CCLights2.network.sendToAllAround(packets[g], new TargetPoint(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord, 4096.0D));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -88,7 +85,7 @@ public final class PacketSenders {
 			int wheel) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
-		out.writeByte(PacketHandler.NET_GPUEVENT);
+		out.writeByte(PacketHandlerIMPL.NET_GPUEVENT);
 		out.writeInt(tile.xCoord);
 		out.writeInt(tile.yCoord);
 		out.writeInt(tile.zCoord);
@@ -107,10 +104,10 @@ public final class PacketSenders {
 	}
 
 	public synchronized static void sendPacketToPlayer(int x, int y, int z,
-			TileEntityGPU tile, Player player) {
+			TileEntityGPU tile, EntityPlayer player) {
 		try {
 			ByteArrayDataOutput out = ByteStreams.newDataOutput();
-			out.writeByte(PacketHandler.NET_GPUINIT);
+			out.writeByte(PacketHandlerIMPL.NET_GPUINIT);
 			out.writeInt(x);
 			out.writeInt(y);
 			out.writeInt(z);
@@ -124,10 +121,10 @@ public final class PacketSenders {
 				it.next().getMatrix(matrix);
 				writeMatrix(out, matrix);
 			}
-			Packet[] packets = PacketChunker.instance.createPackets(
+			PacketMessage[] packets = PacketChunker.instance.createPackets(
 					"CCLights2", out.toByteArray());
 			for (int g = 0; g < packets.length; g++) {
-				PacketDispatcher.sendPacketToPlayer(packets[g], player);
+				CCLights2.network.sendTo(packets[g], (EntityPlayerMP)player);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -135,11 +132,11 @@ public final class PacketSenders {
 
 	}
 
-	public static void sendTextures(Player whom, Texture tex, int id, int x,
+	public static void sendTextures(EntityPlayer whom, Texture tex, int id, int x,
 			int y, int z) {
 		try {
 			ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-			outputStream.writeByte(PacketHandler.NET_GPUDOWNLOAD);
+			outputStream.writeByte(PacketHandlerIMPL.NET_GPUDOWNLOAD);
 			outputStream.writeInt(x);
 			outputStream.writeInt(y);
 			outputStream.writeInt(z);
@@ -153,10 +150,10 @@ public final class PacketSenders {
 			for (int i = 0; i < arr.length; i++) {
 				outputStream.writeInt(arr[i]);
 			}
-			Packet[] packets = PacketChunker.instance.createPackets(
+			PacketMessage[] packets = PacketChunker.instance.createPackets(
 					"CCLights2", outputStream.toByteArray());
 			for (int g = 0; g < packets.length; g++) {
-				PacketDispatcher.sendPacketToPlayer(packets[g], whom);
+				CCLights2.network.sendTo(packets[g], (EntityPlayerMP) whom);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -166,7 +163,7 @@ public final class PacketSenders {
 	public static void mouseEvent(int mx, int my, int par3,
 			TileEntityMonitor tile) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_GPUMOUSE);
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUMOUSE);
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
@@ -179,7 +176,7 @@ public final class PacketSenders {
 
 	public static void mouseEventMove(int mx, int my, TileEntityMonitor tile) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_GPUMOUSE);
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUMOUSE);
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
@@ -191,7 +188,7 @@ public final class PacketSenders {
 
 	public static void mouseEventUp(TileEntityMonitor tile) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_GPUMOUSE);
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUMOUSE);
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
@@ -201,7 +198,7 @@ public final class PacketSenders {
 
 	public static void screenshot(TileEntityTTrans tile, BufferedImage screenshot) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_SCREENSHOT);
+		outputStream.writeByte(PacketHandlerIMPL.NET_SCREENSHOT);
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
@@ -225,9 +222,9 @@ public final class PacketSenders {
 			outputStream.writeInt(screenshotArray.length);
 			outputStream.write(screenshotArray);
 
-			Packet[] packets = PacketChunker.instance.createPackets("CCLights2", outputStream.toByteArray());
+			PacketMessage[] packets = PacketChunker.instance.createPackets("CCLights2", outputStream.toByteArray());
 			for (int g = 0; g < packets.length; g++) {
-				PacketDispatcher.sendPacketToServer(packets[g]);
+				CCLights2.network.sendToServer(packets[g]);
 			}
 		} catch (IOException e1) {
 			CCLights2.debug("failed to send screenshot packets");
@@ -236,7 +233,7 @@ public final class PacketSenders {
 
 	public static void sendKeyEvent(char par1, int par2, TileEntityMonitor tile) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_GPUEVENT);
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUEVENT);
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
@@ -248,7 +245,7 @@ public final class PacketSenders {
 
 		if (ChatAllowedCharacters.isAllowedCharacter(par1)) {
 			ByteArrayDataOutput outputStream1 = ByteStreams.newDataOutput();
-			outputStream1.writeByte(PacketHandler.NET_GPUEVENT);
+			outputStream1.writeByte(PacketHandlerIMPL.NET_GPUEVENT);
 			outputStream1.writeInt(tile.xCoord);
 			outputStream1.writeInt(tile.yCoord);
 			outputStream1.writeInt(tile.zCoord);
@@ -258,6 +255,19 @@ public final class PacketSenders {
 			outputStream1.writeChar(par1);
 			createPacketAndSend(outputStream1);
 		}
+	}
+	
+	public static void sendKeyEventUp(char par1, int par2, TileEntityMonitor tile) {
+		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUEVENT);
+		outputStream.writeInt(tile.xCoord);
+		outputStream.writeInt(tile.yCoord);
+		outputStream.writeInt(tile.zCoord);
+		outputStream.writeUTF("key_up");
+		outputStream.writeInt(1);
+		outputStream.writeInt(0);
+		outputStream.writeInt(par2);
+		createPacketAndSend(outputStream);
 	}
 
 	public static void writeMatrix(ByteArrayDataOutput out, double[] matrix) {
@@ -270,7 +280,7 @@ public final class PacketSenders {
 			int yCoord, int zCoord, int dimId, int m_width, int m_height,
 			int m_xIndex, int m_yIndex, int m_dir) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_GPUTILE);
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUTILE);
 		outputStream.writeInt(xCoord);
 		outputStream.writeInt(yCoord);
 		outputStream.writeInt(zCoord);
@@ -279,17 +289,14 @@ public final class PacketSenders {
 		outputStream.writeInt(m_xIndex);
 		outputStream.writeInt(m_yIndex);
 		outputStream.writeInt(m_dir);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "CCLights2";
+		PacketMessage packet = new PacketMessage();
 		packet.data = outputStream.toByteArray();
-		packet.length = packet.data.length;
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 4096.0D,
-				dimId, packet);
+		CCLights2.network.sendToAllAround(packet, new TargetPoint(dimId,xCoord, yCoord, zCoord, 4096.0D));
 	}
 
 	public static void GPUDOWNLOAD(int xCoord, int yCoord, int zCoord) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_GPUDOWNLOAD);
+		outputStream.writeByte(PacketHandlerIMPL.NET_GPUDOWNLOAD);
 		outputStream.writeInt(xCoord);
 		outputStream.writeInt(yCoord);
 		outputStream.writeInt(zCoord);
@@ -297,23 +304,19 @@ public final class PacketSenders {
 	}
 
 	public static void createPacketAndSend(ByteArrayDataOutput mergeStream) {
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "CCLights2";
+		PacketMessage packet = new PacketMessage();
 		packet.data = mergeStream.toByteArray();
-		packet.length = packet.data.length;
-		PacketDispatcher.sendPacketToServer(packet);
+		CCLights2.network.sendToServer(packet);
 	}
 
-	public static void SYNC(int monitorWidth, int monitorHeight,Player player) {
+	public static void SYNC(int monitorWidth, int monitorHeight,EntityPlayer player) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
-		outputStream.writeByte(PacketHandler.NET_SYNC);
+		outputStream.writeByte(PacketHandlerIMPL.NET_SYNC);
 		outputStream.writeShort(monitorWidth);
 		outputStream.writeShort(monitorHeight);
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "CCLights2";
+		PacketMessage packet = new PacketMessage();
 		packet.data = outputStream.toByteArray();
-		packet.length = packet.data.length;
-		PacketDispatcher.sendPacketToPlayer(packet, player);
+		CCLights2.network.sendTo(packet, (EntityPlayerMP)player);
 	}
 
 }

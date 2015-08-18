@@ -1,12 +1,12 @@
 package ds.mods.CCLights2;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import ds.mods.CCLights2.block.tileentity.TileEntityMonitor;
 import ds.mods.CCLights2.client.gui.GuiMonitor;
 import ds.mods.CCLights2.client.gui.GuiTablet;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -22,7 +22,7 @@ public class GuiHandler implements IGuiHandler {
 		switch (ID)
 		{
 		case 0:
-			TileEntity tile_entity = world.getBlockTileEntity(x, y, z);
+			TileEntity tile_entity = world.getTileEntity(x, y, z);
 			if(tile_entity instanceof TileEntityMonitor) {
 				return new GuiMonitor(((TileEntityMonitor) tile_entity));
 			}

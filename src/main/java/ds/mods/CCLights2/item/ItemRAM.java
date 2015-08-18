@@ -2,18 +2,18 @@ package ds.mods.CCLights2.item;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ds.mods.CCLights2.CCLights2;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import ds.mods.CCLights2.CCLights2;
 
 public class ItemRAM extends Item {
-	public ItemRAM(int par1) {
-		super(par1);
+	public ItemRAM() {
+		super();
 		this.hasSubtypes = true;
 		this.setUnlocalizedName("ram");
 		this.setCreativeTab(CCLights2.ccltab);
@@ -26,10 +26,10 @@ public class ItemRAM extends Item {
 		int ramammt = (par1ItemStack.getItemDamage()+1);
 		par3List.add(ramammt+"K");
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, @SuppressWarnings("rawtypes") List par3List)
+	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, @SuppressWarnings("rawtypes") List par3List)
     {
 		super.getSubItems(par1, par2CreativeTabs, par3List);
 		for (int i = 1; i<8; i++)
@@ -39,7 +39,7 @@ public class ItemRAM extends Item {
     }
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IconRegister)
     {
         this.itemIcon = par1IconRegister.registerIcon("cclights:ram");
     }

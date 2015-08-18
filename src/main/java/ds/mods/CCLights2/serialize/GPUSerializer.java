@@ -1,14 +1,13 @@
 package ds.mods.CCLights2.serialize;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
 import ds.mods.CCLights2.block.tileentity.TileEntityGPU;
 import ds.mods.CCLights2.client.ClientProxy;
 import ds.mods.CCLights2.gpu.GPU;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class GPUSerializer implements ISerializer {
 
@@ -18,7 +17,7 @@ public class GPUSerializer implements ISerializer {
 		dat.writeInt(g.tile.xCoord);
 		dat.writeInt(g.tile.yCoord);
 		dat.writeInt(g.tile.zCoord);
-		dat.writeInt(g.tile.worldObj.provider.dimensionId);
+		dat.writeInt(g.tile.getWorldObj().provider.dimensionId);
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class GPUSerializer implements ISerializer {
 		
 		World world = ClientProxy.getClientWorld();
 		
-		TileEntity noncast = world.getBlockTileEntity(x, y, z);
+		TileEntity noncast = world.getTileEntity(x, y, z);
 		if (noncast != null)
 		{
 			TileEntityGPU g = (TileEntityGPU) noncast;

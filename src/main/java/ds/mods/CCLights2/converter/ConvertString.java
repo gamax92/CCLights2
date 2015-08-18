@@ -1,11 +1,13 @@
 package ds.mods.CCLights2.converter;
 
+import dan200.computercraft.api.lua.LuaException;
+
 public class ConvertString {
-	public static String convert(Object obj) throws Exception
+	public static String convert(Object obj) throws LuaException
 	{
 		if (obj instanceof String)
 			return (String) obj;
 		else
-			throw new Exception("string expected, got "+obj.getClass().getName());
+			throw new LuaException("string expected, got "+obj.getClass().getName());
 	}
 }

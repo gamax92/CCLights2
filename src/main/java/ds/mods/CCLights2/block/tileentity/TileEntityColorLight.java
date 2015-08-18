@@ -3,11 +3,12 @@ package ds.mods.CCLights2.block.tileentity;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityColorLight  extends TileEntity implements IPeripheral{
     int color;
@@ -24,7 +25,7 @@ public class TileEntityColorLight  extends TileEntity implements IPeripheral{
 
 	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] arguments) throws Exception {
+			int method, Object[] arguments) throws LuaException {
 		if (method == 0) {
 			String colorString = arguments[0].toString();
 			try {
@@ -33,10 +34,10 @@ public class TileEntityColorLight  extends TileEntity implements IPeripheral{
 				if (colors.contains(colorString.toLowerCase())) {
 					color = colors.indexOf(colorString.toLowerCase());
 				}
-				else{throw new Exception("Invalid COLOR!");}
+				else{throw new LuaException("Invalid COLOR!");}
 			}
 			if (color > 16 || color < 0) {
-				throw new Exception("Invalid COLOR!");
+				throw new LuaException("Invalid COLOR!");
 			}
             //colorChange();
             return null;

@@ -5,9 +5,13 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
@@ -18,12 +22,13 @@ if (System.getenv().BUILD_NUMBER != null)
 else
 	ext.buildNumber = 0
 
-version = "0.4.1"
+version = "0.4.2"
 group = "ds.mods.CCLights2"
 archivesBaseName = "CCLights2"
 
 minecraft {
-	version = "1.6.4-9.11.1.964"
+	version = "1.7.10-10.13.4.1448-1.7.10"
+	runDir = "eclipse"
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
 }

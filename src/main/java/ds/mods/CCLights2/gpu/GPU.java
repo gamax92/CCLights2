@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import dan200.computercraft.api.lua.LuaException;
 import ds.mods.CCLights2.block.tileentity.TileEntityGPU;
 import ds.mods.CCLights2.network.PacketSenders;
 
@@ -284,7 +285,7 @@ public class GPU {
 	 * @return Return values for ComputerCraft
 	 * @throws Exception
 	 */
-	public Object[] processCommand(DrawCMD cmd) throws Exception
+	public Object[] processCommand(DrawCMD cmd) throws LuaException
 	{
 		if (cmd == null)
 			return null;
@@ -398,9 +399,9 @@ public class GPU {
 					//image loaded successfully time to create texture
 					int id = newTexture(img.getWidth(),img.getHeight());
 					if (id == -1) {
-						throw new Exception("Not enough memory for texture");
+						throw new LuaException("Not enough memory for texture");
 					} else if (id == -2) {
-						throw new Exception("Not enough texture slots");
+						throw new LuaException("Not enough texture slots");
 					} else {
 					Texture tex = textures[id];
 					tex.graphics.drawImage(img, 0, 0, null);
@@ -471,11 +472,11 @@ public class GPU {
 	/**
 	 * Load an image from a bytearray
 	 */
-	public BufferedImage loadImage(byte[] data) throws Exception {
+	public BufferedImage loadImage(byte[] data) throws LuaException {
 		try {
 			return ImageIO.read(new ByteArrayInputStream(data));
 		} catch (IOException e) {
-			throw new Exception("Failed to Load Image provided, invalid data?");
+			throw new LuaException("Failed to Load Image provided, invalid data?");
 		}
 	}
 	
@@ -486,7 +487,7 @@ public class GPU {
 	{
 		if (!drawlist.isEmpty())
 		{
-			if (!tile.worldObj.isRemote)
+			if (!tile.getWorldObj().isRemote)
 			{
 		    	PacketSenders.sendPacketsNow(drawlist,tile);
 			}

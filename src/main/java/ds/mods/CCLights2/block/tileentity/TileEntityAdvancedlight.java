@@ -2,18 +2,19 @@ package ds.mods.CCLights2.block.tileentity;
 
 import java.io.IOException;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
-
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import ds.mods.CCLights2.CCLights2;
 import ds.mods.CCLights2.network.PacketChunker;
+import ds.mods.CCLights2.network.PacketHandler.PacketMessage;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityAdvancedlight  extends TileEntity implements IPeripheral {
 	    public float r = 255;
@@ -41,8 +42,7 @@ public class TileEntityAdvancedlight  extends TileEntity implements IPeripheral 
 	        return (new String[] { "setColorRGB", "getColorRGB"});
 	    }
         @Override
-        public Object[] callMethod(IComputerAccess computer,ILuaContext context, int method, Object[] arguments)
-	     throws Exception {
+        public Object[] callMethod(IComputerAccess computer,ILuaContext context, int method, Object[] arguments) throws LuaException {
 	    	if (method == 0)
 	        {
 	    		int r = ((Double) arguments[0]).intValue();
@@ -50,7 +50,7 @@ public class TileEntityAdvancedlight  extends TileEntity implements IPeripheral 
 	    		int b = ((Double) arguments[2]).intValue();
 	    		if (r > 255 || r < 0 || g > 255 || g < 0 || b > 255 || b < 0)
 	            {
-	            	throw new Exception("Invalid RGB!");
+	            	throw new LuaException("Invalid RGB!");
 	            }
 	        	this.r = r;
 	            this.g = g;
@@ -76,8 +76,8 @@ public class TileEntityAdvancedlight  extends TileEntity implements IPeripheral 
 	    		outputStream.writeFloat(this.r);
 	    		outputStream.writeFloat(this.g);
 	    		outputStream.writeFloat(this.b);
-	    	Packet[] packets = PacketChunker.instance.createPackets("CCLights2", outputStream.toByteArray());
-	    	PacketDispatcher.sendPacketToAllPlayers(packets[0]);
+	    		PacketMessage[] packets = PacketChunker.instance.createPackets("CCLights2", outputStream.toByteArray());
+	    		CCLights2.network.sendToAllAround(packets[0], new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 4096.0D));
 	    	} catch (IOException ex) {
 	    		ex.printStackTrace();
 	    	}

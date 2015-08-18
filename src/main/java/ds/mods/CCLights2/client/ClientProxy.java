@@ -4,18 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.ByteBuffer;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 import ds.mods.CCLights2.CCLights2;
 import ds.mods.CCLights2.CommonProxy;
 import ds.mods.CCLights2.block.tileentity.TileEntityExternalMonitor;
@@ -23,6 +17,9 @@ import ds.mods.CCLights2.block.tileentity.TileEntityTTrans;
 import ds.mods.CCLights2.client.render.TabletRenderer;
 import ds.mods.CCLights2.client.render.TileEntityExternalMonitorRenderer;
 import ds.mods.CCLights2.network.PacketSenders;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 public class ClientProxy extends CommonProxy {
 	private static ByteBuffer ssBuffer;
@@ -39,10 +36,10 @@ public class ClientProxy extends CommonProxy {
 
 		RenderingRegistry.registerBlockHandler(new TileEntityExternalMonitorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityExternalMonitor.class, new TileEntityExternalMonitorRenderer());
-		MinecraftForgeClient.registerItemRenderer(CCLights2.tablet.itemID,new TabletRenderer());
+		MinecraftForgeClient.registerItemRenderer(CCLights2.tablet, new TabletRenderer());
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedlight.class, new TileEntityLightRenderer());
 
-		TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
+		FMLCommonHandler.instance().bus().register(new ClientTickHandler());
 	}
 
 	@Override
