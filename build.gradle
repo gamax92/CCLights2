@@ -22,7 +22,7 @@ if (System.getenv().BUILD_NUMBER != null)
 else
 	ext.buildNumber = 0
 
-version = "0.4.2"
+version = "0.4.3"
 group = "ds.mods.CCLights2"
 archivesBaseName = "CCLights2"
 

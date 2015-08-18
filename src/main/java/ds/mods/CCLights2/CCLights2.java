@@ -18,7 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid = "CCLights2", name = "CCLights2", version = "0.4.2", dependencies="required-after:ComputerCraft@[1.7,)", acceptedMinecraftVersions = "1.7.10")
+@Mod(modid = "CCLights2", name = "CCLights2", version = "0.4.3", dependencies="required-after:ComputerCraft@[1.7,)", acceptedMinecraftVersions = "1.7.10")
 public class CCLights2 {
 	@Mod.Instance("CCLights2")
 	public static CCLights2 instance;

@@ -6,6 +6,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
 import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import ds.mods.CCLights2.CCLights2;
@@ -16,7 +17,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
-public class TileEntityExternalMonitor extends TileEntityMonitor implements IPeripheral {
+public class TileEntityExternalMonitor extends TileEntityMonitor {
 	public static final int MAX_WIDTH = 16;
 	public static final int MAX_HEIGHT = 9;
 	public static final int TICKS_TIL_SYNC = 20 * 600;
@@ -36,6 +37,11 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 	public TileEntityExternalMonitor() {
 		mon = new Monitor(32, 32,getMonitorObject());
 		mon.tex.fill(Color.black);
+	}
+	
+	@Override
+	public MonitorObject getMonitorObject() {
+		return new ExternalMonitorObject();
 	}
 
 	public void destroy() {
@@ -458,43 +464,31 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 		propogateTerminal();
 	}
 
-	@Override
-	public String[] getMethodNames() {
-		return new String[]{"getResolution","getDPM","getBlockResolution"};
-	}
-
-	@Override
-	public Object[] callMethod(IComputerAccess computer,ILuaContext context, int method,Object[] arguments) {
-		switch (method)
-		{
-		case 0:
-		{
-			return new Object[]{mon.getWidth(),mon.getHeight()};
+	public class ExternalMonitorObject extends MonitorObject
+	{
+		@Override
+		public String[] getMethodNames() {
+			return new String[]{"getResolution","getDPM","getBlockResolution"};
 		}
-		case 1:
-		{
-			return new Object[]{32};
+	
+		@Override
+		public Object[] callMethod(ILuaContext context, int method,Object[] arguments) {
+			switch (method)
+			{
+			case 0:
+			{
+				return new Object[]{mon.getWidth(),mon.getHeight()};
+			}
+			case 1:
+			{
+				return new Object[]{32};
+			}
+			case 2:
+			{
+				return new Object[]{m_width,m_height};
+			}
+			}
+			return null;
 		}
-		case 2:
-		{
-			return new Object[]{m_width,m_height};
-		}
-		}
-		return null;
-	}
-
-	@Override
-	public String getType() {return "Monitor";}
-
-	@Override
-	public void attach(IComputerAccess computer) {}
-
-	@Override
-	public void detach(IComputerAccess computer) {}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		if(other.getType() == getType()){return true;}
-		else return false;
 	}
 }

@@ -366,6 +366,26 @@ public class GPU {
 					bindedTexture.filledRect(color,(Integer) cmd.args[0],(Integer) cmd.args[1],(Integer) cmd.args[2],(Integer) cmd.args[3]);
 					break;
 				}
+				case Triangle:
+				{
+					bindedTexture.triangle(color,(Integer) cmd.args[0],(Integer) cmd.args[1],(Integer) cmd.args[2],(Integer) cmd.args[3],(Integer) cmd.args[4],(Integer) cmd.args[5]);
+					break;
+				}
+				case FilledTriangle:
+				{
+					bindedTexture.filledTriangle(color,(Integer) cmd.args[0],(Integer) cmd.args[1],(Integer) cmd.args[2],(Integer) cmd.args[3],(Integer) cmd.args[4],(Integer) cmd.args[5]);
+					break;
+				}
+				case Oval:
+				{
+					bindedTexture.oval(color,(Integer) cmd.args[0],(Integer) cmd.args[1],(Integer) cmd.args[2],(Integer) cmd.args[3]);
+					break;
+				}
+				case FilledOval:
+				{
+					bindedTexture.filledOval(color,(Integer) cmd.args[0],(Integer) cmd.args[1],(Integer) cmd.args[2],(Integer) cmd.args[3]);
+					break;
+				}
 				case SetPixels:
 				{
 					int i = 4;
@@ -418,7 +438,7 @@ public class GPU {
 					bindedTexture.drawText(str, (Integer) cmd.args[0], (Integer) cmd.args[1], color);
 					break;
 				}
-				case Transelate:
+				case Translate:
 				{
 					translate((Double)cmd.args[0],(Double)cmd.args[1]);
 					break;

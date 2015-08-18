@@ -115,7 +115,8 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 	public String[] getMethodNames() {
 		return new String[] { "fill", "plot", "createTexture", "drawTexture",
 				"drawText", "bindTexture", "freeTexture", "line", "rectangle",
-				"filledRectangle", "setPixels", "flipTextureV", "import",
+				"filledRectangle", "triangle", "filledTriangle", "oval",
+				"filledOval", "setPixels", "flipTextureV", "import",
 				"translate", "rotate", "rotateAround", "scale", "push", "pop",
 				"blur", "clearRect", "origin", "getFreeMemory",
 				"getTotalMemory", "getUsedMemory", "getSize", "getPixels",
@@ -205,7 +206,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			break;
 		}
 		case Plot: {
-			//was plot and setColorRGB is now plot
+			//plot
 			if (args.length >= 2) {
 				int x = ConvertInteger.convert(args[0]);
 				int y = ConvertInteger.convert(args[1]);
@@ -298,7 +299,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 				tex = ConvertInteger.convert(args[0]);
 			}
 			if (gpu.textures[tex] == null)
-				throw new LuaException("getMonitorSize: texture does not exist");
+				throw new LuaException("getSize: texture does not exist");
 			Texture texture = gpu.textures[tex];
 			return new Object[] { texture.getWidth(),texture.getHeight() };
 		}
@@ -334,7 +335,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			break;
 		}
 		case FilledRectangle: {
-			//filledrectangle
+			//filledRectangle
 			if (args.length > 3) {
 				DrawCMD cmd = new DrawCMD();
 				Object[] nargs = new Object[] { ConvertInteger.convert(args[0]),
@@ -351,6 +352,62 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			}
 			break;
 		}
+		case Triangle: {
+			//triangle
+			if (args.length > 5) {
+				DrawCMD cmd = new DrawCMD();
+				Object[] nargs = new Object[] { ConvertInteger.convert(args[0]), ConvertInteger.convert(args[1]), ConvertInteger.convert(args[2]), ConvertInteger.convert(args[3]), ConvertInteger.convert(args[4]), ConvertInteger.convert(args[5]) };
+				cmd.cmd = CommandEnum.Triangle;
+				cmd.args = nargs;
+				gpu.processCommand(cmd);
+				gpu.drawlist.push(cmd);
+			} else {
+				throw new LuaException("triangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
+			}
+			break;
+		}
+		case FilledTriangle: {
+			//filledTriangle
+			if (args.length > 5) {
+				DrawCMD cmd = new DrawCMD();
+				Object[] nargs = new Object[] { ConvertInteger.convert(args[0]), ConvertInteger.convert(args[1]), ConvertInteger.convert(args[2]), ConvertInteger.convert(args[3]), ConvertInteger.convert(args[4]), ConvertInteger.convert(args[5]) };
+				cmd.cmd = CommandEnum.FilledTriangle;
+				cmd.args = nargs;
+				gpu.processCommand(cmd);
+				gpu.drawlist.push(cmd);
+			} else {
+				throw new LuaException("filledTriangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
+			}
+			break;
+		}
+		case Oval: {
+			//oval
+			if (args.length > 3) {
+				DrawCMD cmd = new DrawCMD();
+				Object[] nargs = new Object[] { ConvertInteger.convert(args[0]), ConvertInteger.convert(args[1]), ConvertInteger.convert(args[2]), ConvertInteger.convert(args[3]) };
+				cmd.cmd = CommandEnum.Oval;
+				cmd.args = nargs;
+				gpu.processCommand(cmd);
+				gpu.drawlist.push(cmd);
+			} else {
+				throw new LuaException("oval: Argument Error: x, y, width, height expected");
+			}
+			break;
+		}
+		case FilledOval: {
+			//filledOval
+			if (args.length > 3) {
+				DrawCMD cmd = new DrawCMD();
+				Object[] nargs = new Object[] { ConvertInteger.convert(args[0]), ConvertInteger.convert(args[1]), ConvertInteger.convert(args[2]), ConvertInteger.convert(args[3]) };
+				cmd.cmd = CommandEnum.FilledOval;
+				cmd.args = nargs;
+				gpu.processCommand(cmd);
+				gpu.drawlist.push(cmd);
+			} else {
+				throw new LuaException("filledOval: Argument Error: x, y, width, height expected");
+			}
+			break;
+		}
 		case GetBindedTexture: {
 			//getBindedTexture
 			return new Object[] { gpu.bindedSlot };
@@ -358,7 +415,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 		case SetPixels: {
 			//setPixels
 			if (args.length < 4) {
-				throw new LuaException("setPixelsRaw: Argument Error: w, h, x, y, {[r,g,b,a]}... expected");
+				throw new LuaException("setPixels: Argument Error: w, h, x, y, {[r,g,b,a]}... expected");
 			} else {
 				int w = ConvertInteger.convert(args[0]);
 				int h = ConvertInteger.convert(args[1]);
@@ -382,7 +439,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			}
 		}
 		case FlipVertically: {
-			//flipTextureV
+			//flipVertically
 			if (args.length > 0) {
 				DrawCMD cmd = new DrawCMD();
 				Object[] nargs = new Object[] { ConvertInteger.convert(args[0]) };
@@ -393,7 +450,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 				return ret;
 			}
 			else{
-				throw new LuaException("Number expected.");
+				throw new LuaException("flipVertically: Argument Error: textureid expected");
 			}
 		}
 		case Import: {
@@ -447,7 +504,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 				String format = ConvertString.convert(args[1]);
 				if (texid<0 || texid>gpu.textures.length || gpu.textures[texid] == null)
 				{
-					throw new LuaException("Texture does not exist.");
+					throw new LuaException("export: Texture does not exist.");
 				}
 				Texture tex = gpu.textures[texid];
 				ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -467,7 +524,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 		}
 		case DrawText:
 		{
-			//Drawtext
+			//drawText
 			if (args.length > 2)
 			{
 				String str = ConvertString.convert(args[0]);
@@ -547,7 +604,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			//getColor
 			return new Object[]{gpu.color.getRed(),gpu.color.getGreen(),gpu.color.getBlue(),gpu.color.getAlpha()};
 		}
-		case Transelate:
+		case Translate:
 		{
 			//translate
 			double x = ConvertDouble.convert(args[0]);
@@ -556,7 +613,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			Object[] nargs = new Object[2];
 			nargs[0] = x;
 			nargs[1] = y;
-			cmd.cmd = CommandEnum.Transelate;
+			cmd.cmd = CommandEnum.Translate;
 			cmd.args = nargs;
 			Object[] ret = gpu.processCommand(cmd);
 			gpu.drawlist.push(cmd);
@@ -661,7 +718,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 		}
 		case ClearRectangle:
 		{
-			//clearRect
+			//clearRectangle
 			if (args.length >= 4) {
 				DrawCMD cmd = new DrawCMD();
 				Object[] nargs = new Object[] { ConvertInteger.convert(args[0]),ConvertInteger.convert(args[1]),ConvertInteger.convert(args[2]),ConvertInteger.convert(args[3]) };
@@ -673,7 +730,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			}
 			else
 			{
-				throw new LuaException("clearRect: Argument Error: x, y, width, height expected");
+				throw new LuaException("clearRectangle: Argument Error: x, y, width, height expected");
 			}
 		}
 		case Origin:
