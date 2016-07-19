@@ -1,6 +1,6 @@
 CCLights 2 is a Open Source Minecraft mod that adds a Peripheral for ComputerCraft. The GPU Peripheral is capable of rendering draw commands and outputting them to a Monitor, which has a right clickable GUI to use your mouse and keyboard to control actions. This gives a whole new experience for ComputerCraft.
 
-[Download 1.7.10 (CC 1.74)](https://dl.dropboxusercontent.com/u/93572794/Mods/CCLights2-1.7.10-0.4.3.jar)
+[Download 1.7.10 (CC 1.74)](http://gamax92.pc-logix.com/mods/CCLights2-1.7.10-0.4.3.jar)
 
 TODO:
 -  Make Network code more efficent (Note: This should never be checked off, because the network code always needs to be more efficent)
