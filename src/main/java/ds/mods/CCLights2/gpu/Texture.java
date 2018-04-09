@@ -7,13 +7,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
 import ds.mods.CCLights2.CCLights2;
 import ds.mods.CCLights2.jhlabs.image.BoxBlurFilter;
-import net.minecraft.util.ChatAllowedCharacters;
 
 
 public class Texture {
@@ -430,11 +428,9 @@ public class Texture {
         }
         else
         {
-            int i = Arrays.asList(ChatAllowedCharacters.allowedCharacters).indexOf(par1);
-
-            if (i >= 0)
+            if (isAllowedCharacter(par1))
             {
-                return charWidth[i + 32];
+                return charWidth[par1];
             }
             else
             {
@@ -507,13 +503,12 @@ public class Texture {
 	{
 		for (int i = 0; i<text.length(); i++)
 		{
-			int cha = Arrays.asList(ChatAllowedCharacters.allowedCharacters).indexOf(text.charAt(i));
-			if (cha == -1) cha = 0;
+			int cha = text.charAt(i);
+			if (!isAllowedCharacter((char) cha)) cha = 0;
 			//Draw character
 			int cx = cha%16;
 			int cy = (cha-cx)/16;
 			cy*=8;
-			cy+=16;
 			cx*=8;
 			for (int fx = 0; fx<6; fx++)
 			{
@@ -599,5 +594,9 @@ public class Texture {
 		{
 			img.getRGB(0, 0, width, height, rgbCache, 0, 16*32);
 		}
+	}
+
+	private static boolean isAllowedCharacter(char c){
+		return c < 256 && c != 167 && c != 127;
 	}
 }
